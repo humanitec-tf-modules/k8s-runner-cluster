@@ -6,6 +6,10 @@ output "runner_serviceaccount_name" {
   description = "Name of the Kubernetes service account for the runner."
   value       = kubernetes_service_account_v1.runner.metadata[0].name
 }
+output "runner_serviceaccount_annotations" {
+  description = "Annotations of the Kubernetes service account"
+  value       = kubernetes_service_account_v1.runner.metadata[0].annotations
+}
 output "runner_role_name" {
   description = "Name of the Kubernetes role for the runner."
   value       = kubernetes_role_v1.runner.metadata[0].name

@@ -16,8 +16,8 @@ run "defaults" {
     error_message = "Service account should be placed in the runner namespace"
   }
   assert {
-    condition     = length(coalesce(kubernetes_service_account_v1.runner.metadata[0].annotations, {})) == 0
-    error_message = "Service account should have no annotations by default"
+    condition     = length(coalesce(output.runner_serviceaccount_annotations, {})) == 0
+    error_message = "Output runner_serviceaccount_annotations should be empty by default"
   }
   assert {
     condition     = output.runner_serviceaccount_name == "humanitec-runner"
@@ -94,11 +94,11 @@ run "all_variables_set" {
     error_message = "Service account should be placed in the runner namespace"
   }
   assert {
-    condition = kubernetes_service_account_v1.runner.metadata[0].annotations == tomap({
+    condition = output.runner_serviceaccount_annotations == tomap({
       "iam.gke.io/gcp-service-account" = "runner@my-project.iam.gserviceaccount.com"
       "example.com/team"               = "platform"
     })
-    error_message = "Service account annotations should be taken from runner_serviceaccount_annotations"
+    error_message = "Output runner_serviceaccount_annotations should be taken from runner_serviceaccount_annotations"
   }
   assert {
     condition     = output.runner_serviceaccount_name == "my-serviceaccount"
