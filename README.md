@@ -2,11 +2,75 @@
 
 This repository contains an OpenTofu/Terraform module to set up a Kubernetes cluster as a runner cluster for the [Container (builtin)](https://developer.humanitec.com/platform-orchestrator/docs/integration-and-extensions/drivers/container-builtin/) Driver and Drivers based on it such as the [Terraform and OpenTofu Container (builtin)](https://developer.humanitec.com/platform-orchestrator/docs/integration-and-extensions/drivers/terraform-and-opentofu-container-builtin/) Driver.
 
-TODO - call out it does not work for the Terraform runner and others.
+> [!NOTE]
+> The module does not support the setup of the non-built-in Drivers, including the [Container Runner](https://developer.humanitec.com/platform-orchestrator/docs/integration-and-extensions/drivers/generic-drivers/container-runner/), [Terraform Runner](https://developer.humanitec.com/platform-orchestrator/docs/integration-and-extensions/drivers/generic-drivers/terraform-runner/), and [Terraform and OpenTofu Container Runner](https://developer.humanitec.com/platform-orchestrator/docs/integration-and-extensions/drivers/generic-drivers/terraform-and-opentofu-container-runner/) Drivers.
 
-TODO - add description and usage examples.
+If your runner cluster is one of AKS (Azure), EKS (AWS), or GKE (Google Cloud), we recommend using the Workload Identity solutions of these cluster types for your Humanitec runner. Use these specialized modules instead which wrap the present module and also create the required Workload Identity setup:
 
-TODO - link to cloud specific wrapper modules that also set up the runner identity.
+- AKS: [k8s-runner-cluster-aks](https://github.com/humanitec-tf-modules/k8s-runner-cluster-aks)
+- EKS: [k8s-runner-cluster-eks](https://github.com/humanitec-tf-modules/k8s-runner-cluster-eks)
+- GKE: [k8s-runner-cluster-gke](https://github.com/humanitec-tf-modules/k8s-runner-cluster-gke)
+
+Use the present module if you are not using Workload Identity or if your runner cluster is not of one of these types.
+
+## Usage
+
+### Common usage: Runner cluster is also an Operator cluster
+
+When the runner cluster is also an Operator cluster, you can use all defaults.
+
+```hcl
+module "my_runner_cluster" {
+  source = "github.com/humanitec-tf-modules/k8s-runner-cluster?ref=vX.Y.Z"
+  providers = {
+    kubernetes = kubernetes
+  }
+}
+```
+
+### Cluster is a separate runner cluster
+
+```hcl
+module "my_runner_cluster" {
+  source = "github.com/humanitec-tf-modules/k8s-runner-cluster?ref=vX.Y.Z"
+  providers = {
+    kubernetes = kubernetes
+  }
+
+  is_separate_runner_cluster = true
+}
+```
+
+### Runner Jobs will use the OpenTofu/Terraform "kubernetes" backend
+
+```hcl
+module "my_runner_cluster" {
+  source = "github.com/humanitec-tf-modules/k8s-runner-cluster?ref=vX.Y.Z"
+  providers = {
+    kubernetes = kubernetes
+  }
+
+  support_kubernetes_tf_backend = true
+}
+```
+
+### Kubernetes service account needs annotations
+
+❌❌ TODO: verify that the format for defining the annotations is correct
+
+```hcl
+module "my_runner_cluster" {
+  source = "github.com/humanitec-tf-modules/k8s-runner-cluster?ref=vX.Y.Z"
+  providers = {
+    kubernetes = kubernetes
+  }
+
+  runner_serviceaccount_annotations = {
+    "iam.gke.io/gcp-service-account" = "runner@my-project.iam.gserviceaccount.com"
+    "example.com/team"               = "platform"
+  }
+}
+```
 
 <!-- BEGIN_TF_DOCS -->
 ## Requirements
