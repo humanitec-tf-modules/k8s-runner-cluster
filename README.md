@@ -28,7 +28,7 @@ module "my_runner_cluster" {
 }
 ```
 
-### Cluster is a separate runner cluster
+### Add annotations to the Kubernetes service account
 
 ```hcl
 module "my_runner_cluster" {
@@ -37,14 +37,10 @@ module "my_runner_cluster" {
     kubernetes = kubernetes
   }
 
-  is_separate_runner_cluster = true
-  separate_runner_cluster_subjects = [
-    {
-      kind      = "User"
-      name      = "my-runner-identity"
-      api_group = "rbac.authorization.k8s.io"
-    },
-  ]
+  runner_serviceaccount_annotations = {
+    "iam.gke.io/gcp-service-account" = "runner@my-project.iam.gserviceaccount.com"
+    "example.com/team"               = "platform"
+  }
 }
 ```
 
@@ -61,9 +57,7 @@ module "my_runner_cluster" {
 }
 ```
 
-### Kubernetes service account needs annotations
-
-❌❌ TODO: verify that the format for defining the annotations is correct
+### Cluster is a separate runner cluster
 
 ```hcl
 module "my_runner_cluster" {
@@ -72,10 +66,19 @@ module "my_runner_cluster" {
     kubernetes = kubernetes
   }
 
-  runner_serviceaccount_annotations = {
-    "iam.gke.io/gcp-service-account" = "runner@my-project.iam.gserviceaccount.com"
-    "example.com/team"               = "platform"
-  }
+  is_separate_runner_cluster = true
+  # Allow these RoleBinding subjects to manage runners on the cluster
+  separate_runner_cluster_subjects = [
+    {
+      kind      = "Group"
+      name      = "my-group"
+      api_group = "rbac.authorization.k8s.io"
+    },
+    {
+      kind = "User"
+      name = "my-user"
+    },
+  ]
 }
 ```
 
