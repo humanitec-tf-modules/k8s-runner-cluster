@@ -103,7 +103,8 @@ resource "kubernetes_role_v1" "runner_separate" {
     verbs      = ["get"]
   }
 }
-# Bind the role to the service account
+# Bind the role to the identities accessing the cluster
+# The subjects depend on the technology used for that kind of access, so they are configurable
 resource "kubernetes_role_binding_v1" "runner_separate" {
   count = var.is_separate_runner_cluster ? 1 : 0
   metadata {
@@ -115,9 +116,13 @@ resource "kubernetes_role_binding_v1" "runner_separate" {
     kind      = "Role"
     name      = kubernetes_role_v1.runner_separate[0].metadata[0].name
   }
-  subject {
-    kind      = "ServiceAccount"
-    name      = kubernetes_service_account_v1.runner.metadata[0].name
-    namespace = kubernetes_namespace_v1.runner.metadata[0].name
+  dynamic "subject" {
+    for_each = var.separate_runner_cluster_subjects
+    content {
+      kind      = subject.value.kind
+      name      = subject.value.name
+      api_group = subject.value.api_group
+      namespace = subject.value.namespace
+    }
   }
 }

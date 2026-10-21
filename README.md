@@ -38,6 +38,13 @@ module "my_runner_cluster" {
   }
 
   is_separate_runner_cluster = true
+  separate_runner_cluster_subjects = [
+    {
+      kind      = "User"
+      name      = "my-runner-identity"
+      api_group = "rbac.authorization.k8s.io"
+    },
+  ]
 }
 ```
 
