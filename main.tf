@@ -79,7 +79,7 @@ resource "kubernetes_role_binding_v1" "runner" {
 resource "kubernetes_role_v1" "runner_separate" {
   count = var.is_separate_runner_cluster ? 1 : 0
   metadata {
-    name      = "${var.runner_role}-jobs"
+    name      = "${var.runner_role}-separate-cluster"
     namespace = kubernetes_namespace_v1.runner.metadata[0].name
   }
   rule {

@@ -175,8 +175,8 @@ run "all_variables_set" {
     error_message = "Separate runner cluster role should have four rules"
   }
   assert {
-    condition     = output.separate_runner_cluster_role_name == "my-role-jobs"
-    error_message = "Output separate_runner_cluster_role_name should be \"<runner_role>-jobs\""
+    condition     = output.separate_runner_cluster_role_name == "my-role-separate-cluster"
+    error_message = "Output separate_runner_cluster_role_name should be \"<runner_role>-separate-cluster\""
   }
 
   # Separate runner cluster role binding
@@ -185,7 +185,7 @@ run "all_variables_set" {
     error_message = "A separate runner cluster role binding should be created"
   }
   assert {
-    condition     = kubernetes_role_binding_v1.runner_separate[0].role_ref[0].name == "my-role-jobs"
+    condition     = kubernetes_role_binding_v1.runner_separate[0].role_ref[0].name == "my-role-separate-cluster"
     error_message = "Separate runner cluster role binding should reference the separate runner cluster role"
   }
   assert {
@@ -218,8 +218,8 @@ run "all_variables_set" {
     error_message = "Separate runner cluster role binding should bind the third subject from separate_runner_cluster_subjects"
   }
   assert {
-    condition     = output.separate_runner_cluster_rolebinding_name == "my-role-jobs"
-    error_message = "Output separate_runner_cluster_rolebinding_name should be \"<runner_role>-jobs\""
+    condition     = output.separate_runner_cluster_rolebinding_name == "my-role-separate-cluster"
+    error_message = "Output separate_runner_cluster_rolebinding_name should be \"<runner_role>-separate-cluster\""
   }
   assert {
     condition = (
