@@ -249,6 +249,24 @@ run "separate_runner_cluster_requires_subjects" {
   ]
 }
 
+run "separate_runner_cluster_serviceaccount_subject_requires_namespace" {
+  command = plan
+
+  variables {
+    is_separate_runner_cluster = true
+    separate_runner_cluster_subjects = [
+      {
+        kind = "ServiceAccount"
+        name = "my-serviceaccount"
+      },
+    ]
+  }
+
+  expect_failures = [
+    var.separate_runner_cluster_subjects,
+  ]
+}
+
 run "separate_runner_cluster_subject_optional_attributes" {
   command = plan
 

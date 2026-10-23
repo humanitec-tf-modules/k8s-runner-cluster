@@ -35,7 +35,7 @@ variable "is_separate_runner_cluster" {
   default     = false
 }
 variable "separate_runner_cluster_subjects" {
-  description = "Subjects to bind to the additional role created if `is_separate_runner_cluster` is `true`. These are the identities accessing the separate runner cluster, which depend on the technology used for that kind of access. Required to contain at least one subject if `is_separate_runner_cluster` is `true`."
+  description = "Subjects to bind to the additional role created if `is_separate_runner_cluster` is `true`. These are the identities accessing the separate runner cluster, which depend on the technology used for that kind of access. Required to contain at least one subject if `is_separate_runner_cluster` is `true`. `namespace` is required for subjects of kind `ServiceAccount`. For other kinds it has no effect, but note that the Kubernetes provider still sets it to `default` on the created RoleBinding."
   type = list(object({
     kind      = string
     name      = string
@@ -48,5 +48,12 @@ variable "separate_runner_cluster_subjects" {
   validation {
     condition     = !var.is_separate_runner_cluster || length(var.separate_runner_cluster_subjects) > 0
     error_message = "separate_runner_cluster_subjects must contain at least one subject if is_separate_runner_cluster is true."
+  }
+
+  validation {
+    condition = alltrue([
+      for s in var.separate_runner_cluster_subjects : s.kind != "ServiceAccount" || try(length(s.namespace) > 0, false)
+    ])
+    error_message = "separate_runner_cluster_subjects entries of kind ServiceAccount must set namespace."
   }
 }
