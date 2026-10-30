@@ -57,7 +57,7 @@ module "my_runner_cluster" {
 }
 ```
 
-### Cluster is a separate runner cluster
+### Cluster is a separate runner cluster, i.e. not on the same cluster as an Operator
 
 ```hcl
 module "my_runner_cluster" {
