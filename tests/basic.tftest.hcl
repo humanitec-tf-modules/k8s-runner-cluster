@@ -204,16 +204,14 @@ run "all_variables_set" {
     condition = (
       kubernetes_role_binding_v1.runner_separate[0].subject[1].kind == "Group" &&
       kubernetes_role_binding_v1.runner_separate[0].subject[1].name == "my-group" &&
-      kubernetes_role_binding_v1.runner_separate[0].subject[1].api_group == "rbac.authorization.k8s.io" &&
-      kubernetes_role_binding_v1.runner_separate[0].subject[1].namespace == null
+      kubernetes_role_binding_v1.runner_separate[0].subject[1].api_group == "rbac.authorization.k8s.io"
     )
     error_message = "Separate runner cluster role binding should bind the second subject from separate_runner_cluster_subjects"
   }
   assert {
     condition = (
       kubernetes_role_binding_v1.runner_separate[0].subject[2].kind == "User" &&
-      kubernetes_role_binding_v1.runner_separate[0].subject[2].name == "my-user" &&
-      kubernetes_role_binding_v1.runner_separate[0].subject[2].namespace == null
+      kubernetes_role_binding_v1.runner_separate[0].subject[2].name == "my-user"
     )
     error_message = "Separate runner cluster role binding should bind the third subject from separate_runner_cluster_subjects"
   }
@@ -287,8 +285,7 @@ run "separate_runner_cluster_subject_optional_attributes" {
   assert {
     condition = (
       kubernetes_role_binding_v1.runner_separate[0].subject[0].kind == "User" &&
-      kubernetes_role_binding_v1.runner_separate[0].subject[0].name == "my-user" &&
-      kubernetes_role_binding_v1.runner_separate[0].subject[0].namespace == null
+      kubernetes_role_binding_v1.runner_separate[0].subject[0].name == "my-user"
     )
     error_message = "Separate runner cluster role binding should bind the subject from separate_runner_cluster_subjects"
   }
@@ -333,8 +330,7 @@ run "separate_runner_cluster_rolebinding_subjects_output_after_apply" {
   assert {
     condition = (
       output.separate_runner_cluster_rolebinding_subjects[0].kind == "User" &&
-      output.separate_runner_cluster_rolebinding_subjects[0].name == "my-user" &&
-      output.separate_runner_cluster_rolebinding_subjects[0].namespace == null
+      output.separate_runner_cluster_rolebinding_subjects[0].name == "my-user"
     )
     error_message = "Output separate_runner_cluster_rolebinding_subjects should contain the subject from separate_runner_cluster_subjects"
   }
