@@ -23,7 +23,7 @@ variable "runner_role" {
   default     = "humanitec-runner"
 }
 variable "support_kubernetes_tf_backend" {
-  description = "Whether to support a `kubernetes` OpenTofu/Terraform backend for the runner. Setting this to `true` adds extended permissions to the role for the runner service account. If not required, leave it at `false` to maintain least privilege."
+  description = "Whether to support a `kubernetes` OpenTofu/Terraform backend for the runner. Required when using the Terraform/OpenTofu Container (builtin) Driver with its default backend. Setting this to `true` adds extended permissions to the role for the runner service account. If not required, leave it at `false` to maintain least privilege."
   type        = bool
   nullable    = false
   default     = false

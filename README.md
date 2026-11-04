@@ -28,6 +28,8 @@ module "my_runner_cluster" {
 }
 ```
 
+[Enable the `kubernetes` backend](#runner-jobs-will-use-the-opentofuterraform-kubernetes-backend) to use the default backend setting of the [Terraform and OpenTofu Container (builtin)](https://developer.humanitec.com/platform-orchestrator/docs/integration-and-extensions/drivers/terraform-and-opentofu-container-builtin/) Driver.
+
 ### Add annotations to the Kubernetes service account
 
 ```hcl
